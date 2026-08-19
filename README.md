@@ -94,67 +94,84 @@ falls back to an "LI" monogram.
 - **Accessibility** — skip link, visible focus rings, labelled controls, and
   `prefers-reduced-motion` respected.
 
-## Deploying to www.ladyikeya.com
+## Deploying to www.ladyikeya.com (IONOS hosting)
 
-The repo already contains `CNAME` (`www.ladyikeya.com`) and `.nojekyll`. Two
-steps remain, one on GitHub and one at IONOS.
+The site is plain static files — no build step, no server-side code, no
+database. Deploying means copying seven files into the domain's web root.
 
-### 1. GitHub — turn Pages on
+**Upload these, keeping the folder structure exactly:**
 
-Repo → **Settings** → **Pages** → *Build and deployment*:
-
-- Source: **Deploy from a branch**
-- Branch: the repo's default branch, folder **`/ (root)`** → **Save**
-
-Pages reads `CNAME` and fills in the custom domain itself. Leave
-**Enforce HTTPS** unchecked until the certificate is issued (see step 3).
-
-### 2. IONOS — point DNS at GitHub
-
-IONOS → **Domains & SSL** → `ladyikeya.com` → **DNS**.
-
-`www` as a CNAME, so the subdomain follows GitHub:
-
-| Type | Host name | Points to | TTL |
-| --- | --- | --- | --- |
-| CNAME | `www` | `dannatech.github.io` | 1 hour |
-
-Note the target is the **account** host, `dannatech.github.io` — not the repo
-name, and no `https://` or trailing slash.
-
-Then the apex, so `ladyikeya.com` without the `www` also works. Four A records,
-same host, one per IP:
-
-| Type | Host name | Points to | TTL |
-| --- | --- | --- | --- |
-| A | `@` | `185.199.108.153` | 1 hour |
-| A | `@` | `185.199.109.153` | 1 hour |
-| A | `@` | `185.199.110.153` | 1 hour |
-| A | `@` | `185.199.111.153` | 1 hour |
-
-Optionally the IPv6 equivalents, as AAAA records on `@`:
-`2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`,
-`2606:50c0:8003::153`.
-
-**Delete any existing A, AAAA, or CNAME record on `@` or `www` first** — leftover
-records pointing at the old host will keep serving the old site, or make the
-domain flap between the two.
-
-### 3. Wait, then enforce HTTPS
-
-DNS takes anywhere from a few minutes to a few hours. Once GitHub's Pages
-settings show the domain as verified, tick **Enforce HTTPS**; the Let's Encrypt
-certificate is issued automatically and can take up to 24 hours.
-
-Check progress with:
-
-```bash
-dig +short www.ladyikeya.com     # expect dannatech.github.io + GitHub IPs
-dig +short ladyikeya.com         # expect the four 185.199.x.153 addresses
+```
+index.html
+robots.txt
+sitemap.xml
+assets/css/main.css
+assets/js/main.js
+assets/img/portrait.webp
+assets/files/lady-ikeya-cv.pdf
 ```
 
-### Serving from the apex instead
+The `assets/` folders must stay nested as shown — `index.html` refers to them by
+relative path, so a flattened upload will load the page with no styling, no
+portrait, and a broken CV link.
 
-To make `ladyikeya.com` canonical rather than `www`, put `ladyikeya.com` in
-`CNAME`, keep the A records, and change the `www` CNAME to point at
-`dannatech.github.io` anyway — GitHub then redirects `www` to the apex.
+Do **not** upload `README.md` or `.gitignore`; they are repo housekeeping and
+serve no purpose on the web host.
+
+### Option A — IONOS File Manager (browser, no extra software)
+
+1. IONOS → **Hosting** → your package → **File Manager** (sometimes under
+   *Web Space* → *Manage files*).
+2. Open the web root. IONOS usually names it `/` for the primary domain, or
+   `/ladyikeya.com/` when several domains share one package. It is the folder
+   whose contents already answer at `https://www.ladyikeya.com/`.
+3. Remove or rename the old site's files. Renaming the old `index.html` to
+   `index.old.html` is the safest way to keep a rollback.
+4. Upload, preserving folders. If the uploader will not take folders, create
+   `assets`, then `assets/css`, `assets/js`, `assets/img`, `assets/files`
+   by hand and upload into each.
+
+### Option B — SFTP (better for repeat updates)
+
+IONOS → **Hosting** → **SFTP & SSH** for the host, username, and port; set the
+password there if you have not already.
+
+```bash
+# from the project root
+sftp -P <port> <user>@<host>
+> cd /                 # the web root from step 2 above
+> put index.html
+> put robots.txt
+> put sitemap.xml
+> mkdir assets assets/css assets/js assets/img assets/files
+> put assets/css/main.css   assets/css/
+> put assets/js/main.js     assets/js/
+> put assets/img/portrait.webp assets/img/
+> put assets/files/lady-ikeya-cv.pdf assets/files/
+```
+
+Or in one command with rsync, if SSH is enabled on the package:
+
+```bash
+rsync -avz --delete \
+  --exclude '.git' --exclude 'README.md' --exclude '.gitignore' \
+  ./ <user>@<host>:/
+```
+
+`--delete` makes the server match the local folder exactly, which also clears
+out the old site. Drop that flag if anything else lives in the web root.
+
+### After uploading
+
+Open `https://www.ladyikeya.com/` and hard-refresh (Ctrl/Cmd + Shift + R) —
+browsers cache the old page aggressively. Check that the portrait appears, the
+theme toggle works, and **Download CV** saves the PDF.
+
+No DNS change is needed if the domain already points at this IONOS package.
+Confirm HTTPS is on under **Domains & SSL** → `ladyikeya.com` → *SSL*; IONOS
+includes a free certificate, and the site should be served over HTTPS only.
+
+### Updating later
+
+Edit `index.html`, then re-upload just the files you changed. There is nothing
+to rebuild.
