@@ -94,7 +94,67 @@ falls back to an "LI" monogram.
 - **Accessibility** — skip link, visible focus rings, labelled controls, and
   `prefers-reduced-motion` respected.
 
-## Deploying to GitHub Pages
+## Deploying to www.ladyikeya.com
 
-Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/ (root)`.
-Add a `CNAME` file containing `www.ladyikeya.com` to serve the custom domain.
+The repo already contains `CNAME` (`www.ladyikeya.com`) and `.nojekyll`. Two
+steps remain, one on GitHub and one at IONOS.
+
+### 1. GitHub — turn Pages on
+
+Repo → **Settings** → **Pages** → *Build and deployment*:
+
+- Source: **Deploy from a branch**
+- Branch: the repo's default branch, folder **`/ (root)`** → **Save**
+
+Pages reads `CNAME` and fills in the custom domain itself. Leave
+**Enforce HTTPS** unchecked until the certificate is issued (see step 3).
+
+### 2. IONOS — point DNS at GitHub
+
+IONOS → **Domains & SSL** → `ladyikeya.com` → **DNS**.
+
+`www` as a CNAME, so the subdomain follows GitHub:
+
+| Type | Host name | Points to | TTL |
+| --- | --- | --- | --- |
+| CNAME | `www` | `dannatech.github.io` | 1 hour |
+
+Note the target is the **account** host, `dannatech.github.io` — not the repo
+name, and no `https://` or trailing slash.
+
+Then the apex, so `ladyikeya.com` without the `www` also works. Four A records,
+same host, one per IP:
+
+| Type | Host name | Points to | TTL |
+| --- | --- | --- | --- |
+| A | `@` | `185.199.108.153` | 1 hour |
+| A | `@` | `185.199.109.153` | 1 hour |
+| A | `@` | `185.199.110.153` | 1 hour |
+| A | `@` | `185.199.111.153` | 1 hour |
+
+Optionally the IPv6 equivalents, as AAAA records on `@`:
+`2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`,
+`2606:50c0:8003::153`.
+
+**Delete any existing A, AAAA, or CNAME record on `@` or `www` first** — leftover
+records pointing at the old host will keep serving the old site, or make the
+domain flap between the two.
+
+### 3. Wait, then enforce HTTPS
+
+DNS takes anywhere from a few minutes to a few hours. Once GitHub's Pages
+settings show the domain as verified, tick **Enforce HTTPS**; the Let's Encrypt
+certificate is issued automatically and can take up to 24 hours.
+
+Check progress with:
+
+```bash
+dig +short www.ladyikeya.com     # expect dannatech.github.io + GitHub IPs
+dig +short ladyikeya.com         # expect the four 185.199.x.153 addresses
+```
+
+### Serving from the apex instead
+
+To make `ladyikeya.com` canonical rather than `www`, put `ladyikeya.com` in
+`CNAME`, keep the A records, and change the `www` CNAME to point at
+`dannatech.github.io` anyway — GitHub then redirects `www` to the apex.
