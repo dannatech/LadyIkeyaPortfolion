@@ -1,44 +1,56 @@
 # ladyikeya.com
 
-Personal academic portfolio for **Lady Ikeya** — Ph.D. candidate in public affairs,
+Personal academic site for **Lady Ikeya** — Ph.D. candidate in public affairs,
 O'Neill School of Public and Environmental Affairs, Indiana University Bloomington.
 
-Static HTML/CSS/JS. No build tooling, no dependencies, no framework. It deploys to
-GitHub Pages, Netlify, Vercel, or any static host by serving the repo root.
+One page, five sections, no build step, no dependencies. Deploys to GitHub Pages,
+Netlify, Vercel, or any static host by serving the repo root.
 
 ---
 
 ## Structure
 
 ```
-index.html          generated  ← Home
-research.html       generated  ← Working papers, works in progress
-teaching.html       generated  ← Courses, student feedback
-cv.html             generated  ← Web CV
-
-build.sh                       ← Assembles the four pages above
-src/partials/                  ← Shared <head>, header/nav, footer
-src/pages/                     ← Per-page <main> content  ← EDIT THESE
-assets/css/main.css            ← Design system + all styling
-assets/js/main.js              ← Theme toggle, mobile nav, scroll reveal
-assets/img/portrait.jpg        ← Hero portrait (add this file)
+index.html                     ← the whole site
+assets/css/main.css            ← design system + all styling
+assets/js/main.js              ← theme toggle, mobile nav, scroll reveal
+assets/img/portrait.jpg        ← hero portrait (add this file)
 assets/files/lady-ikeya-cv.pdf ← CV download (add this file)
 ```
 
-> **Important:** the four `.html` files in the repo root are *generated*. Editing them
-> directly works until the next build, then the changes are lost. Edit
-> `src/pages/*.html` and `src/partials/*.html` instead, then run `./build.sh`.
-
-## Editing
+The five sections, in order: **hero**, **research** (working papers + works in
+progress), **teaching** (course + student comments), **awards**, **contact**.
+Editing means opening `index.html` and typing — there is nothing to compile.
 
 ```bash
-./build.sh          # regenerate index/research/teaching/cv .html
 python3 -m http.server 8000   # preview at http://localhost:8000
 ```
 
-### Adding a student comment
+## Editing
 
-In `src/pages/teaching.html`, inside `<div class="quote-grid">`, add:
+### Add a paper
+
+Copy an existing `<li class="paper">` inside the relevant `<ol class="papers">`,
+then renumber the `paper-num` spans.
+
+```html
+<li class="paper reveal">
+  <span class="paper-num" aria-hidden="true">03</span>
+  <div>
+    <h3 class="paper-title">Title of the paper</h3>
+    <p class="paper-authors"><span class="me">Ikeya, Lady</span> &middot; 2026</p>
+    <p class="paper-note">Any status note, e.g. under review.</p>
+  </div>
+</li>
+```
+
+`<span class="me">` bolds your own name in the author list. For a status pill, add
+`<ul class="tags"><li class="tag tag--accent">Job Market Paper</li></ul>`.
+
+### Add a student comment
+
+Inside `<div class="quote-grid">`. The grid reflows on its own, and cards in a row
+match heights automatically.
 
 ```html
 <figure class="quote reveal">
@@ -47,12 +59,10 @@ In `src/pages/teaching.html`, inside `<div class="quote-grid">`, add:
 </figure>
 ```
 
-The grid reflows on its own — any number of comments lays out cleanly.
+### Add a fellowship or award
 
-### Adding a fellowship or award
-
-In `src/pages/cv.html`, inside `<ol class="timeline" id="awards-list">`. The list is in
-**descending order — newest first**, so new entries go at the **top**:
+Inside `<ol class="timeline" id="awards-list">`. The list runs **newest year first**,
+so new entries go at the **top**.
 
 ```html
 <li class="award">
@@ -64,32 +74,26 @@ In `src/pages/cv.html`, inside `<ol class="timeline" id="awards-list">`. The lis
 </li>
 ```
 
-### Adding a paper
-
-In `src/pages/research.html`, copy an existing `<li class="paper">` block. Renumber the
-`paper-num` spans, and mirror the entry into `src/pages/cv.html`.
-
 ## Files that still need to be added
 
-These are referenced by the site but not yet in the repo:
+Referenced by the page but not yet in the repo:
 
 | Path | What it is |
 | --- | --- |
-| `assets/img/portrait.jpg` | Hero portrait. Roughly 4:5 portrait crop, ~1200px wide. Falls back to a monogram if missing. |
-| `assets/files/lady-ikeya-cv.pdf` | The downloadable CV. |
+| `assets/img/portrait.jpg` | Hero portrait. Roughly 4:5 crop, ~1200px wide. Falls back to an "LI" monogram if missing. |
+| `assets/files/lady-ikeya-cv.pdf` | The downloadable CV. Two links point at it — the hero button and the contact card. |
 
 ## Design notes
 
-- **Type** — Newsreader (display serif) for headings, Inter for body, IBM Plex Mono for
-  years and course codes. Loaded from Google Fonts with system-serif/sans fallbacks.
-- **Colour** — warm paper ground, near-black ink, deep garnet accent (`#8c1d21`),
-  a quiet nod to Indiana crimson.
-- **Theme** — follows the OS setting by default; the header toggle overrides it and the
-  choice persists in `localStorage`. An inline script in `<head>` applies the stored
-  theme before first paint, so there is no flash.
-- **Accessibility** — skip link, visible focus rings, `aria-current` on the active nav
-  item, honours `prefers-reduced-motion`, and all interactive controls are labelled.
-- **Print** — `cv.html` prints cleanly; chrome and decoration are stripped.
+- **Type** — Newsreader (display serif) for headings, Inter for body, IBM Plex Mono
+  for years and course codes, from Google Fonts with system fallbacks.
+- **Colour** — warm cream ground (`#fbf9f6`, `#f3efe9` for alternating sections) with
+  content blocks raised on white, and a deep garnet accent (`#8c1d21`).
+- **Theme** — follows the OS setting; the header toggle overrides it and the choice
+  persists in `localStorage`. An inline script in `<head>` applies the stored theme
+  before first paint, so there is no flash.
+- **Accessibility** — skip link, visible focus rings, labelled controls, and
+  `prefers-reduced-motion` respected.
 
 ## Deploying to GitHub Pages
 
