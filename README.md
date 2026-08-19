@@ -81,7 +81,6 @@ Referenced by the page but not yet in the repo:
 | Path | What it is |
 | --- | --- |
 | `assets/img/portrait.jpg` | Hero portrait. Roughly 4:5 crop, ~1200px wide. Falls back to an "LI" monogram if missing. |
-| `assets/files/lady-ikeya-cv.pdf` | The downloadable CV. Two links point at it — the hero button and the contact card. |
 
 ## Design notes
 
