@@ -118,9 +118,24 @@ The site is plain static files: no build step, no server code, no database.
    | CNAME | `www` | `your-site-name.netlify.app` |
    | A | `@` | `75.2.60.5` |
 
-6. In IONOS → `ladyikeya.com` → **DNS**, delete the existing records on `@` and
-   `www` (the ones pointing at `185.230.63.107`), then add the records above.
+6. In IONOS → `ladyikeya.com` → **DNS**, **edit** exactly two existing rows —
+   do not delete them, just change the Value:
+
+   | Type | Host name | Old value (Wix) | New value |
+   | --- | --- | --- | --- |
+   | A | `@` | `185.230.63.107` | Netlify's apex IP |
+   | CNAME | `www` | `pointing.wixdns.net` | `your-site-name.netlify.app` |
+
+   **Leave every other row alone.** The MX, TXT (SPF), `_dmarc`,
+   `*._domainkey` (DKIM) and `autodiscover` records run email on this domain;
+   deleting any of them silently breaks mail delivery to `@ladyikeya.com`, and
+   that failure looks nothing like a website problem when you go hunting for it.
+   `_domainconnect` is IONOS-managed — leave it too.
+
 7. HTTPS is issued automatically once DNS resolves — no certificate to buy.
+
+The old site is on **Wix**. Moving DNS does not cancel a Wix subscription; if
+one is being paid for, cancel it separately once the new site is confirmed live.
 
 Updating later: drag the folder onto the same site's *Deploys* tab. Netlify
 keeps every previous deploy, so rolling back is one click.
