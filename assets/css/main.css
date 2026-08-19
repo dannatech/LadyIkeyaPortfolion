@@ -595,18 +595,18 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
 /* Student comments */
 .quote-grid {
   margin-top: clamp(1.25rem, 1rem + 1vw, 1.75rem);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.25rem;
+  columns: 1;
+  column-gap: 1.25rem;
 }
 @media (min-width: 700px) {
-  .quote-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .quote-grid { columns: 2; }
 }
 
 .quote {
   position: relative;
-  display: flex;
-  flex-direction: column;
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
   padding: 1.75rem 1.6rem 1.4rem;
   background: var(--paper-raised);
   border: 1px solid var(--rule);
@@ -633,7 +633,6 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   font-size: 1.05rem;
   line-height: 1.6;
   color: var(--ink);
-  flex: 1;
 }
 .quote figcaption {
   margin-top: 1.15rem;
