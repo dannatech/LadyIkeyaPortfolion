@@ -74,13 +74,13 @@ so new entries go at the **top**.
 </li>
 ```
 
-## Files that still need to be added
+## Replacing the portrait
 
-Referenced by the page but not yet in the repo:
-
-| Path | What it is |
-| --- | --- |
-| `assets/img/portrait.jpg` | Hero portrait. Roughly 4:5 crop, ~1200px wide. Falls back to an "LI" monogram if missing. |
+`assets/img/portrait.webp` is shown in a **square** frame with `object-fit: cover`,
+so a roughly 1:1 source loses almost nothing. Update the `width`/`height`
+attributes on the `<img>` to match any replacement — they reserve the space and
+stop the hero jumping as the image loads. If the file is ever missing, the frame
+falls back to an "LI" monogram.
 
 ## Design notes
 
