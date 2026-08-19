@@ -94,12 +94,47 @@ falls back to an "LI" monogram.
 - **Accessibility** — skip link, visible focus rings, labelled controls, and
   `prefers-reduced-motion` respected.
 
-## Deploying to www.ladyikeya.com (IONOS hosting)
+## Deploying to www.ladyikeya.com
 
-The site is plain static files — no build step, no server-side code, no
-database. Deploying means copying seven files into the domain's web root.
+The domain is an **IONOS Instant Domain** contract — registration only, with no
+web space. There is no File Manager or SFTP to upload to, so the files need a
+static host, and IONOS DNS points the domain at it.
 
-**Upload these, keeping the folder structure exactly:**
+The site is plain static files: no build step, no server code, no database.
+
+### Recommended — Netlify Drop (free, no account link, no repo)
+
+1. Go to <https://app.netlify.com/drop>.
+2. Drag the whole project folder (or `ladyikeya-website.zip`) onto the page.
+   It deploys in seconds and gives a URL like `random-name.netlify.app`.
+3. Open that URL and check the site works — portrait, theme toggle, CV download.
+4. Sign up (free) to keep the deploy, then **Site configuration → Domain
+   management → Add a domain** → `www.ladyikeya.com`.
+5. Netlify shows the exact DNS records to create. Use the values from *that*
+   panel; they are authoritative. They will look like:
+
+   | Type | Host | Points to |
+   | --- | --- | --- |
+   | CNAME | `www` | `your-site-name.netlify.app` |
+   | A | `@` | `75.2.60.5` |
+
+6. In IONOS → `ladyikeya.com` → **DNS**, delete the existing records on `@` and
+   `www` (the ones pointing at `185.230.63.107`), then add the records above.
+7. HTTPS is issued automatically once DNS resolves — no certificate to buy.
+
+Updating later: drag the folder onto the same site's *Deploys* tab. Netlify
+keeps every previous deploy, so rolling back is one click.
+
+### Alternative — Cloudflare Pages
+
+Equivalent and also free, via **Create a project → Direct Upload**. Requires
+moving the domain's nameservers to Cloudflare, which is more disruptive than
+editing two records, so prefer Netlify unless you already use Cloudflare.
+
+### Alternative — buy IONOS Web Hosting
+
+If everything should stay under one IONOS bill, add a **Web Hosting** package
+(not Instant Domain). That unlocks the File Manager and SFTP, and the upload is:
 
 ```
 index.html
@@ -111,67 +146,13 @@ assets/img/portrait.webp
 assets/files/lady-ikeya-cv.pdf
 ```
 
-The `assets/` folders must stay nested as shown — `index.html` refers to them by
-relative path, so a flattened upload will load the page with no styling, no
-portrait, and a broken CV link.
+Keep the `assets/` folders nested exactly as shown — `index.html` refers to them
+by relative path, so a flattened upload loses all styling, the portrait, and the
+CV link. With hosting on the same account the domain usually points at it
+already, so no DNS change is needed.
 
-Do **not** upload `README.md` or `.gitignore`; they are repo housekeeping and
-serve no purpose on the web host.
+### Whichever route
 
-### Option A — IONOS File Manager (browser, no extra software)
-
-1. IONOS → **Hosting** → your package → **File Manager** (sometimes under
-   *Web Space* → *Manage files*).
-2. Open the web root. IONOS usually names it `/` for the primary domain, or
-   `/ladyikeya.com/` when several domains share one package. It is the folder
-   whose contents already answer at `https://www.ladyikeya.com/`.
-3. Remove or rename the old site's files. Renaming the old `index.html` to
-   `index.old.html` is the safest way to keep a rollback.
-4. Upload, preserving folders. If the uploader will not take folders, create
-   `assets`, then `assets/css`, `assets/js`, `assets/img`, `assets/files`
-   by hand and upload into each.
-
-### Option B — SFTP (better for repeat updates)
-
-IONOS → **Hosting** → **SFTP & SSH** for the host, username, and port; set the
-password there if you have not already.
-
-```bash
-# from the project root
-sftp -P <port> <user>@<host>
-> cd /                 # the web root from step 2 above
-> put index.html
-> put robots.txt
-> put sitemap.xml
-> mkdir assets assets/css assets/js assets/img assets/files
-> put assets/css/main.css   assets/css/
-> put assets/js/main.js     assets/js/
-> put assets/img/portrait.webp assets/img/
-> put assets/files/lady-ikeya-cv.pdf assets/files/
-```
-
-Or in one command with rsync, if SSH is enabled on the package:
-
-```bash
-rsync -avz --delete \
-  --exclude '.git' --exclude 'README.md' --exclude '.gitignore' \
-  ./ <user>@<host>:/
-```
-
-`--delete` makes the server match the local folder exactly, which also clears
-out the old site. Drop that flag if anything else lives in the web root.
-
-### After uploading
-
-Open `https://www.ladyikeya.com/` and hard-refresh (Ctrl/Cmd + Shift + R) —
-browsers cache the old page aggressively. Check that the portrait appears, the
-theme toggle works, and **Download CV** saves the PDF.
-
-No DNS change is needed if the domain already points at this IONOS package.
-Confirm HTTPS is on under **Domains & SSL** → `ladyikeya.com` → *SSL*; IONOS
-includes a free certificate, and the site should be served over HTTPS only.
-
-### Updating later
-
-Edit `index.html`, then re-upload just the files you changed. There is nothing
-to rebuild.
+The current site at `185.230.63.107` is replaced, not edited. Save anything you
+still want from it first. After the switch, hard-refresh with
+Ctrl/Cmd + Shift + R — browsers cache the old page aggressively.
