@@ -644,6 +644,16 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   color: var(--ink-muted);
 }
 
+.minihead {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: clamp(2rem, 1.6rem + 1.4vw, 2.75rem) 0 1rem;
+}
+
 /* ---------- 10. Awards timeline ---------- */
 
 .timeline {
@@ -655,20 +665,20 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   padding-inline: clamp(1.25rem, 0.9rem + 1.6vw, 2.25rem);
 }
 
-.award {
+.award, .term {
   display: grid;
-  grid-template-columns: 6.5rem minmax(0, 1fr);
+  grid-template-columns: 7.5rem minmax(0, 1fr);
   gap: 0 1.75rem;
   padding: 1.15rem 0;
   border-bottom: 1px solid var(--rule);
 }
-.award:first-child { border-top: 0; }
-.award:last-child { border-bottom: 0; }
+.award:first-child, .term:first-child { border-top: 0; }
+.award:last-child, .term:last-child { border-bottom: 0; }
 @media (max-width: 620px) {
-  .award { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
+  .award, .term { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
 }
 
-.award-year {
+.award-year, .term-year {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   color: var(--accent);
@@ -676,8 +686,8 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   padding-top: 0.22rem;
   font-variant-numeric: tabular-nums;
 }
-.award-name { font-size: 1.06rem; line-height: 1.4; margin-bottom: 0.2rem; }
-.award-org { font-size: 0.9rem; color: var(--ink-muted); }
+.award-name, .term-name { font-size: 1.06rem; line-height: 1.4; margin-bottom: 0.2rem; }
+.award-org, .term-org { font-size: 0.9rem; color: var(--ink-muted); }
 
 /* ---------- 11. Contact ---------- */
 
@@ -759,5 +769,5 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   .section { padding-block: 1rem; border-top: 0; }
   .reveal { opacity: 1; transform: none; }
   a { color: #000; text-decoration: none; }
-  .paper, .award, .quote { break-inside: avoid; }
+  .paper, .award, .term, .quote { break-inside: avoid; }
 }
