@@ -479,6 +479,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
 .paper {
   display: grid;
   grid-template-columns: 3.25rem minmax(0, 1fr);
+  align-items: baseline;
   gap: 0 1.5rem;
   padding: clamp(1.4rem, 1.1rem + 1vw, 2rem) 0;
   border-bottom: 1px solid var(--rule);
@@ -494,38 +495,35 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   font-size: 0.75rem;
   color: var(--ink-muted);
   letter-spacing: 0.06em;
-  padding-top: 0.4rem;
+  font-variant-numeric: tabular-nums;
 }
 
-.paper-title {
+.citation {
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  line-height: 1.32;
-  margin-bottom: 0.55rem;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+  text-wrap: pretty;
 }
-.paper-title a { color: var(--ink); }
-.paper-title a:hover { color: var(--accent); text-decoration: none; }
 
-.paper-authors {
-  font-size: 0.94rem;
-  color: var(--ink-soft);
-  margin-bottom: 0.7rem;
-}
-.paper-authors .me { color: var(--ink); font-weight: 600; }
+.citation .me { font-weight: 600; }
 
-.paper-note {
-  font-size: 0.92rem;
+.citation cite { font-style: italic; }
+
+.status {
+  display: inline;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
   color: var(--ink-muted);
-  font-style: italic;
-  margin-bottom: 0;
+  white-space: normal;
 }
-.paper-note cite { font-style: italic; }
-
-.tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.9rem; list-style: none; }
+.status--accent { color: var(--accent); font-weight: 600; }
 
 .tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
   padding: 0.22rem 0.6rem;
   font-family: var(--font-body);
   font-size: 0.72rem;
@@ -536,13 +534,12 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   background: var(--paper-raised);
   border: 1px solid var(--rule);
   border-radius: 100px;
-  white-space: nowrap;
+  max-width: 100%;
 }
-.tag--accent { color: var(--accent); background: var(--accent-wash); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
-.tag--rr { color: var(--ink); background: transparent; border-color: var(--rule-strong); }
-
-@media (max-width: 620px) {
-  .tag { white-space: normal; max-width: 100%; }
+.tag--accent {
+  color: var(--accent);
+  background: var(--accent-wash);
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
 }
 
 .subhead {
