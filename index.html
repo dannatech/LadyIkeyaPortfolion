@@ -75,10 +75,10 @@
             O&rsquo;Neill School.
           </p>
           <div class="btn-row">
-            <a class="btn" href="assets/files/lady-ikeya-cv.pdf" target="_blank" rel="noopener">
+            <button class="btn" type="button" data-cv-open>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.75"/></svg>
               View CV
-            </a>
+            </button>
             <a class="btn btn--ghost" href="assets/files/lady-ikeya-cv.pdf" download="Lady-L-Ikeya-CV.pdf">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11M7.5 10.5 12 15l4.5-4.5M4.5 18.5h15"/></svg>
               Download
@@ -327,12 +327,42 @@
         </a>
         <div class="contact-card reveal">
           <span class="label">Curriculum Vitae</span>
-          <a class="value" href="assets/files/lady-ikeya-cv.pdf" target="_blank" rel="noopener">View CV</a>
+          <button class="value value-btn" type="button" data-cv-open>View CV</button>
           <span class="card-aside">or <a href="assets/files/lady-ikeya-cv.pdf" download="Lady-L-Ikeya-CV.pdf">download the PDF</a></span>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- ===================== CV VIEWER ===================== -->
+  <div class="cv-viewer" id="cv-viewer" hidden>
+    <div class="cv-viewer-backdrop" data-cv-close></div>
+
+    <div class="cv-viewer-panel" role="dialog" aria-modal="true" aria-labelledby="cv-viewer-title">
+      <header class="cv-viewer-bar">
+        <h2 id="cv-viewer-title">Curriculum Vitae</h2>
+        <div class="cv-viewer-actions">
+          <a class="btn btn--sm" href="assets/files/lady-ikeya-cv.pdf" download="Lady-L-Ikeya-CV.pdf">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11M7.5 10.5 12 15l4.5-4.5M4.5 18.5h15"/></svg>
+            Download PDF
+          </a>
+          <button class="icon-btn cv-viewer-close" type="button" data-cv-close aria-label="Close CV">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="cv-viewer-pages">
+        <img class="cv-page" data-src="assets/img/cv/cv-page-1.webp" width="1275" height="1650" alt="Curriculum vitae, page 1">
+        <img class="cv-page" data-src="assets/img/cv/cv-page-2.webp" width="1275" height="1650" alt="Curriculum vitae, page 2">
+        <p class="cv-viewer-foot">
+          Page images for reading on screen.
+          <a href="assets/files/lady-ikeya-cv.pdf" download="Lady-L-Ikeya-CV.pdf">Download the PDF</a>
+          for the selectable-text original.
+        </p>
+      </div>
+    </div>
+  </div>
 
 </main>
 

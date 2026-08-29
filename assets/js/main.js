@@ -89,6 +89,67 @@
     }
   }
 
+  /* ---- CV viewer ------------------------------------------------------- */
+  var viewer = document.getElementById('cv-viewer');
+
+  if (viewer) {
+    var panel = viewer.querySelector('.cv-viewer-panel');
+    var lastFocused = null;
+    var loaded = false;
+
+    var loadPages = function () {
+      if (loaded) return;
+      loaded = true;
+      viewer.querySelectorAll('.cv-page[data-src]').forEach(function (img) {
+        img.src = img.getAttribute('data-src');
+        img.removeAttribute('data-src');
+      });
+    };
+
+    var focusable = function () {
+      return Array.prototype.filter.call(
+        panel.querySelectorAll('a[href], button:not([disabled])'),
+        function (el) { return el.offsetParent !== null; }
+      );
+    };
+
+    var openViewer = function (trigger) {
+      lastFocused = trigger || document.activeElement;
+      loadPages();
+      viewer.hidden = false;
+      document.body.classList.add('cv-open');
+      var close = viewer.querySelector('.cv-viewer-close');
+      if (close) close.focus();
+      viewer.querySelector('.cv-viewer-pages').scrollTop = 0;
+    };
+
+    var closeViewer = function () {
+      viewer.hidden = true;
+      document.body.classList.remove('cv-open');
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    };
+
+    document.querySelectorAll('[data-cv-open]').forEach(function (el) {
+      el.addEventListener('click', function () { openViewer(el); });
+    });
+
+    viewer.addEventListener('click', function (e) {
+      if (e.target.closest('[data-cv-close]')) closeViewer();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (viewer.hidden) return;
+      if (e.key === 'Escape') { closeViewer(); return; }
+      if (e.key !== 'Tab') return;
+      // keep focus inside the dialog
+      var f = focusable();
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
   /* ---- Current year --------------------------------------------------- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = String(new Date().getFullYear());

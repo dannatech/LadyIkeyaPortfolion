@@ -94,6 +94,39 @@ falls back to an "LI" monogram.
 - **Accessibility** — skip link, visible focus rings, labelled controls, and
   `prefers-reduced-motion` respected.
 
+## Updating the CV
+
+The CV is shown two ways, from two files that must be regenerated together:
+
+| File | Purpose |
+| --- | --- |
+| `assets/files/lady-ikeya-cv.pdf` | the download |
+| `assets/img/cv/cv-page-1.webp`, `-2.webp` | the on-page viewer |
+
+The viewer shows page **images** rather than embedding the PDF, because mobile
+Safari will not reliably render a PDF inside a page — images work everywhere.
+They are lazy: nothing is fetched until someone opens the viewer.
+
+To replace the CV, starting from a `.docx` or `.pdf`:
+
+```bash
+# 1. if starting from Word, convert (needs libreoffice-writer)
+soffice --headless --convert-to pdf --outdir . cv.docx
+
+# 2. the download
+cp cv.pdf assets/files/lady-ikeya-cv.pdf
+
+# 3. the viewer pages, one image per page
+pdftoppm -png -r 150 cv.pdf pg          # -> pg-1.png, pg-2.png, ...
+cwebp -q 82 pg-1.png -o assets/img/cv/cv-page-1.webp
+cwebp -q 82 pg-2.png -o assets/img/cv/cv-page-2.webp
+```
+
+If the new CV has a different number of pages, add or remove the matching
+`<img class="cv-page">` tags inside `<div class="cv-viewer-pages">` in
+`index.html`. Keep the `width`/`height` attributes matching the images so the
+viewer does not jump as they load.
+
 ## Deploying to www.ladyikeya.com
 
 The domain is an **IONOS Instant Domain** contract — registration only, with no
