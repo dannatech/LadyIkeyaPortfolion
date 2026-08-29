@@ -722,6 +722,17 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
 .contact-card .value { font-size: 1rem; color: var(--ink); word-break: break-word; }
 .contact-card:hover .value { color: var(--accent); }
 
+a.value { color: var(--ink); text-decoration: none; }
+a.value:hover { color: var(--accent); text-decoration: underline; }
+
+.card-aside {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+}
+.card-aside a { color: var(--ink-muted); text-decoration: underline; }
+.card-aside a:hover { color: var(--accent); }
+
 /* ---------- 12. Footer ---------- */
 
 .site-footer {
