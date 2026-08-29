@@ -109,8 +109,15 @@ They are lazy: nothing is fetched until someone opens the viewer.
 
 To replace the CV, starting from a `.docx` or `.pdf`:
 
+**Prefer a PDF exported from Word itself.** Word embeds the real Aptos,
+Calibri and Cambria; converting a `.docx` on a machine without those fonts
+substitutes different ones, which shifts line breaks and spacing. Carlito and
+Caladea (`fonts-crosextra-carlito`, `fonts-crosextra-caladea`) are metric-
+compatible stand-ins for Calibri and Cambria and get close, but Aptos has no
+free equivalent. Starting from a Word-exported PDF skips the problem entirely.
+
 ```bash
-# 1. if starting from Word, convert (needs libreoffice-writer)
+# 1. only if starting from Word rather than a PDF (needs libreoffice-writer)
 soffice --headless --convert-to pdf --outdir . cv.docx
 
 # 2. the download
