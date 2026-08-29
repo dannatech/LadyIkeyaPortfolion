@@ -89,6 +89,17 @@
     }
   }
 
+  /* ---- Abstract toggles -------------------------------------------------- */
+  document.querySelectorAll('.abstract-toggle').forEach(function (btn) {
+    var panel = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!panel) return;
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+  });
+
   /* ---- CV viewer ------------------------------------------------------- */
   var viewer = document.getElementById('cv-viewer');
 
