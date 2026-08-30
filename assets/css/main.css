@@ -587,6 +587,7 @@ hr { border: 0; border-top: 1px solid var(--rule); margin: 0; }
   line-height: 1.7;
   color: var(--ink-soft);
 }
+.abstract p + p { margin-top: 0.85em; }
 
 /* ---------- 9. Teaching ---------- */
 
